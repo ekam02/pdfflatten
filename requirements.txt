@@ -1,4 +1,0 @@
-PyMuPDF
-Wand
-pillow
-MagickWand
