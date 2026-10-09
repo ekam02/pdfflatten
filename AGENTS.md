@@ -12,6 +12,17 @@ This document outlines the operational rules and standards that AI agents must f
 
 ---
 
+## 🛑 Scope of Action & Explicit Authorization (Strict)
+
+AI agents must strictly operate within the boundaries defined by the developer:
+
+1. **Explicit Authorization Required:** Do not create, modify, rename, or delete any files, directories, configurations, or dependencies unless explicitly requested or authorized by the developer.
+2. **Proposals Before Implementation:** If improvements, architectural changes, refactors, or new files are identified, propose them in the conversation and wait for developer confirmation before applying any changes.
+3. **No Unsolicited Modifications:** Do not perform proactive code edits, refactoring, or file reorganizations outside the exact scope of the current user request.
+4. **Clarify Ambiguities:** If a request is open-ended or ambiguous, ask clarifying questions instead of making assumptions or executing actions autonomously.
+
+---
+
 ## 📜 Commit Message Rules (Strict)
 
 All commits generated for this repository must strictly adhere to the project's adapted **Conventional Commits** specification:
