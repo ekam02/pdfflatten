@@ -5,7 +5,7 @@ from wand.image import Image as WandImage
 from wand.color import Color
 
 
-class PdfPngPdf:
+class Converter:
     def __init__(self):
         pass
 

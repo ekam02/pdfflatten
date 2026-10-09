@@ -1,7 +1,9 @@
-import shutil
 import os
-from utils.config import Config
-from src.pdf_png_pdf import PdfPngPdf
+
+import shutil
+
+from pdfflatten.utils.config import Config
+from pdfflatten import Converter
 
 
 paths = Config.PATHS
@@ -11,7 +13,7 @@ with os.scandir(path=r'docs\input') as entries:
             file = entry.name
             folder = fr'{paths["pics"]}\{entry.name.replace(".", "")}'
             os.mkdir(folder)
-            PdfPngPdf.convert_pdf_to_images(fr'{paths["input"]}\{file}', folder)
+            Converter.convert_pdf_to_images(fr'{paths["input"]}\{file}', folder)
             shutil.move(fr'{paths["input"]}\{file}', fr'{paths["processed"]}\{file}')
-            PdfPngPdf.convert_images_to_pdf(folder, fr'{paths["output"]}\{file}')
+            Converter.convert_images_to_pdf(folder, fr'{paths["output"]}\{file}')
             shutil.rmtree(folder, ignore_errors=True)
