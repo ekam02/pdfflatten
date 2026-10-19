@@ -22,14 +22,14 @@ Al firmar documentos digitalmente insertando una imagen de firma o trazo, muchos
 [ Documento PDF Original ]
           │
           ▼  (PyMuPDF / Pillow)
-[ Imágenes PNG por página (dpi configurable) ]
+[ Imágenes PNG temporales por página (DPI configurable) ]
           │
           ▼  (Wand / ImageMagick)
 [ Nuevo PDF Reensamblado (Puro mapa de bits) ]
 ```
 
-1. **Extracción y renderizado:** Renderiza cada página del PDF en una imagen PNG de alta resolución.
-2. **Reconstrucción:** Reensambla las imágenes en un nuevo archivo PDF plano, descartando cualquier capa o metadato vectorial previo.
+1. **Extracción y renderizado:** Renderiza cada página del PDF en una imagen PNG dentro de un directorio temporal aislado (`tempfile.TemporaryDirectory`).
+2. **Reconstrucción:** Reensambla las imágenes en un nuevo archivo PDF plano, descartando cualquier capa o metadato vectorial previo y limpiando automáticamente los archivos temporales.
 
 ---
 
@@ -67,19 +67,57 @@ sudo apt install imagemagick libmagickwand-dev
 
 ---
 
-## 🛠️ Uso
+## 🛠️ Uso (CLI)
 
-### Procesamiento por lotes (`main.py`)
+Una vez instalado el paquete, puedes ejecutar el comando `pdfflatten` directamente o mediante `python -m pdfflatten`:
 
-Por defecto, el script procesa los archivos depositados en las carpetas de trabajo:
+### 1. Modo de archivo individual
 
 ```bash
-python main.py
+# Aplanar un PDF especificando ruta de salida y resolución
+pdfflatten documento.pdf -o documento_aplanado.pdf --dpi 300
+
+# Aplanar un PDF hacia el directorio por defecto (runtime/output/documento.pdf)
+pdfflatten documento.pdf
 ```
 
-* **`docs/input`**: Coloca aquí los archivos PDF a procesar.
-* **`docs/output`**: Aquí se generará el PDF final aplanado.
-* **`docs/processed`**: Mueve el PDF original una vez procesado.
+### 2. Modo de procesamiento por lotes (`--batch`)
+
+Procesa todos los archivos PDF ubicados en el directorio de entrada (`runtime/input` por defecto), genera los PDFs aplanados en `runtime/output` y archiva los originales en `runtime/processed`:
+
+```bash
+# Usando las carpetas de runtime/ por defecto
+pdfflatten --batch
+
+# Especificando directorios personalizados y modo detallado
+pdfflatten --batch --input-dir ./entradas --output-dir ./salidas --dpi 200 --verbose
+```
+
+### 3. Opciones disponibles
+
+| Argumento / Flag | Descripción |
+| :--- | :--- |
+| `path` | Ruta del archivo PDF individual a procesar. |
+| `-o, --output` | Ruta del archivo PDF de salida o directorio destino. |
+| `-b, --batch` | Procesa todos los archivos PDF en el directorio de entrada. |
+| `--input-dir` | Directorio de entrada para `--batch` (defecto: `runtime/input`). |
+| `--output-dir` | Directorio de salida para `--batch` (defecto: `runtime/output`). |
+| `--processed-dir` | Directorio donde se archivan los originales en `--batch` (defecto: `runtime/processed`). |
+| `--dpi` | Resolución de rasterizado en puntos por pulgada (defecto: `300`). |
+| `-v, --verbose` | Muestra mensajes de nivel `DEBUG` en consola. |
+| `-V, --version` | Muestra la versión instalada de la herramienta. |
+
+---
+
+## 📚 Documentación (Estructura Diátaxis)
+
+La documentación en [`docs/`](docs/README.md) está organizada con el marco **Diátaxis** para adaptarse tanto a usuarios sin experiencia técnica como a desarrolladores:
+
+- 🧭 **[Índice General de Documentación](docs/README.md)**
+- 🎓 **[Tutorial: Primeros pasos paso a paso](docs/tutorials/primeros-pasos.md)** *(Ideal para nuevos usuarios)*
+- 🛠️ **[Guías Prácticas (How-To): Procesar por lotes, ajustar peso y resolver errores](docs/how-to/procesar-varios-pdfs.md)**
+- 💡 **[Explicación: ¿Por qué y cómo aplanar un PDF?](docs/explanation/como-funciona-el-aplanado.md)** *(Sin tecnicismos)*
+- 📖 **[Referencia Técnica: CLI y API de Python](docs/reference/cli-y-api.md)**
 
 ---
 
@@ -90,7 +128,7 @@ El proyecto cuenta con herramientas para garantizar la calidad del código:
 * **Linter y formateador (Ruff):**
   ```bash
   ruff check .
-  ruff format .
+  ruff format --check .
   ```
 
 * **Chequeo de tipos (Mypy):**
